@@ -123,9 +123,9 @@ jobs:
           username: ${{ secrets.PRODUCTION_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
           script: |
-            docker compose -f kittygram/docker-compose.production.yml pull
-            docker compose -f kittygram/docker-compose.production.yml down
-            docker compose -f kittygram/docker-compose.production.yml up -d
+            docker-compose -f kittygram/docker-compose.production.yml pull
+            docker-compose -f kittygram/docker-compose.production.yml down
+            docker-compose -f kittygram/docker-compose.production.yml up -d
 
   auto_tests:
     runs-on: ubuntu-latest
