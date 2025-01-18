@@ -116,18 +116,6 @@ jobs:
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
           source: "docker-compose.production.yml"
           target: "/home/${{ secrets.PRODUCTION_USER }}/kittygram"
-      - name: Remove conflicting packages
-        run: |
-            sudo apt-get remove -y containerd
-      - name: Fix broken packages
-        run: |
-            sudo apt-get update
-            sudo apt-get dist-upgrade -y
-            sudo apt-get autoremove -y
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
       - name: Pull and restart containers
         uses: appleboy/ssh-action@master
         with:
