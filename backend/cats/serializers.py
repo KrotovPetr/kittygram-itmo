@@ -97,4 +97,3 @@ class CatSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
- 
