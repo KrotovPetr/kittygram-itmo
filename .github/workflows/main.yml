@@ -148,33 +148,33 @@ jobs:
     - name: Run tests
       run: python -m pytest
 
-  # notify_on_success:
-  #   runs-on: ubuntu-latest
-  #   needs: auto_tests
-  #   if: success()
-  #   steps:
-  #     - name: Notify on success
-  #       uses: appleboy/telegram-action@master
-  #       with:
-  #         to: ${{ secrets.TELEGRAM_CHAT_ID }}
-  #         token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  #         message: |
-  #           Project ${{ github.repository }} was successfully deployed
-  #           Created by: ${{ github.actor }}
-  #           Commit: ${{ github.event.commits[0].message }}
-  #           Link: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+  notify_on_success:
+    runs-on: ubuntu-latest
+    needs: auto_tests
+    if: success()
+    steps:
+      - name: Notify on success
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            Project ${{ github.repository }} was successfully deployed
+            Created by: ${{ github.actor }}
+            Commit: ${{ github.event.commits[0].message }}
+            Link: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
 
-  # notify_on_failure:
-  #   runs-on: ubuntu-latest
-  #   if: failure()
-  #   steps:
-  #     - name: Notify on failure
-  #       uses: appleboy/telegram-action@master
-  #       with:
-  #         to: ${{ secrets.TELEGRAM_CHAT_ID }}
-  #         token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  #         message: |
-  #           Project ${{ github.repository }} failed to deploy
-  #           Created by: ${{ github.actor }}
-  #           Commit: ${{ github.event.commits[0].message }}
-  #           Link: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+  notify_on_failure:
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Notify on failure
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            Project ${{ github.repository }} failed to deploy
+            Created by: ${{ github.actor }}
+            Commit: ${{ github.event.commits[0].message }}
+            Link: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
