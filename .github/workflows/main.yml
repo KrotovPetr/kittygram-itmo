@@ -119,6 +119,11 @@ jobs:
       - name: Remove conflicting packages
         run: |
             sudo apt-get remove -y containerd
+      - name: Fix broken packages
+        run: |
+            sudo apt-get update
+            sudo apt-get dist-upgrade -y
+            sudo apt-get autoremove -y
       - name: Install Docker
         run: |
           sudo apt-get update
