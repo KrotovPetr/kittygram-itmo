@@ -11,8 +11,6 @@ DEBUG = os.environ.get("DEBUG", "false") in {"true", "True", "1"}
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
-STATIC_ROOT = "/app/collected_static"
-
 CORS_ORIGIN_ALLOW_ALL = True
 
 INSTALLED_APPS = [
