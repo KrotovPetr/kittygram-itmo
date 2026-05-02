@@ -30,33 +30,6 @@ jobs:
         with:
           terraform_version: 1.8.3
 
-      - name: Set up Yandex Cloud service account key
-        working-directory: ./infra
-        run: |
-          echo '${{ secrets.YC_KEY_JSON }}' > sa.json
-          # Validate the JSON is correct before proceeding
-          python3 -c "import json,sys; json.load(open('sa.json'))" \
-            && echo "✅ sa.json is valid JSON" \
-            || { echo "❌ sa.json is NOT valid JSON"; exit 1; }
-      
-      - name: Debug SA key
-        working-directory: ./infra
-        env:
-          YC_KEY_JSON: ${{ secrets.YC_KEY_JSON }}
-        run: |
-          echo "Secret length: ${#YC_KEY_JSON}"
-          echo "First 20 chars: ${YC_KEY_JSON:0:20}"
-          printf '%s' "$YC_KEY_JSON" > sa.json
-          echo "File size: $(wc -c < sa.json) bytes"
-          echo "First 50 chars of file:"
-          head -c 50 sa.json
-      
-      - name: Terraform Import Bucket
-        working-directory: ./infra
-        if: ${{ github.event.inputs.action == 'apply' }}
-        run: terraform import yandex_storage_bucket.tf_state itmo-test
-        continue-on-error: true
-
       - name: Terraform Initialize
         working-directory: ./infra
         run: |
@@ -69,6 +42,12 @@ jobs:
         env:
           ACCESS_KEY: ${{ secrets.YC_ACCESS_KEY }}
           SECRET_KEY: ${{ secrets.YC_SECRET_KEY }}
+
+      - name: Terraform Import Bucket
+        working-directory: ./infra
+        if: ${{ github.event.inputs.action == 'apply' }}
+        run: terraform import yandex_storage_bucket.tf_state itmo-test
+        continue-on-error: true
 
       - name: Terraform Plan
         working-directory: ./infra
