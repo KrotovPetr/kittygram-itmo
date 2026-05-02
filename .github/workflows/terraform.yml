@@ -7,6 +7,7 @@ on:
         description: 'Select the Terraform action'
         required: true
         default: 'plan'
+        type: choice
         options:
           - plan
           - apply
@@ -32,11 +33,21 @@ jobs:
       - name: Set up Yandex Cloud service account key
         working-directory: ./infra
         run: |
-          echo "${{ secrets.YC_KEY_JSON }}" | base64 -d > sa.json
+          echo '${{ secrets.YC_KEY_JSON }}' > sa.json
+          # Validate the JSON is correct before proceeding
+          python3 -c "import json,sys; json.load(open('sa.json'))" \
+            && echo "✅ sa.json is valid JSON" \
+            || { echo "❌ sa.json is NOT valid JSON"; exit 1; }
 
       - name: Terraform Initialize
         working-directory: ./infra
-        run: terraform init -reconfigure -input=false -backend-config="access_key=$ACCESS_KEY" -backend-config="secret_key=$SECRET_KEY"
+        run: |
+          terraform init \
+            -reconfigure \
+            -input=false \
+            -backend-config="endpoint=https://storage.yandexcloud.net" \
+            -backend-config="access_key=$ACCESS_KEY" \
+            -backend-config="secret_key=$SECRET_KEY"
         env:
           ACCESS_KEY: ${{ secrets.YC_ACCESS_KEY }}
           SECRET_KEY: ${{ secrets.YC_SECRET_KEY }}
@@ -45,22 +56,13 @@ jobs:
         working-directory: ./infra
         if: ${{ github.event.inputs.action == 'plan' }}
         run: terraform plan
-        env:
-          ACCESS_KEY: ${{ secrets.YC_ACCESS_KEY }}
-          SECRET_KEY: ${{ secrets.YC_SECRET_KEY }}
 
       - name: Terraform Apply
         working-directory: ./infra
         if: ${{ github.event.inputs.action == 'apply' }}
         run: terraform apply -auto-approve
-        env:
-          ACCESS_KEY: ${{ secrets.YC_ACCESS_KEY }}
-          SECRET_KEY: ${{ secrets.YC_SECRET_KEY }}
 
       - name: Terraform Destroy
         working-directory: ./infra
         if: ${{ github.event.inputs.action == 'destroy' }}
         run: terraform destroy -auto-approve
-        env:
-          ACCESS_KEY: ${{ secrets.YC_ACCESS_KEY }}
-          SECRET_KEY: ${{ secrets.YC_SECRET_KEY }}
