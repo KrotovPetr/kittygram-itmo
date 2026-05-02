@@ -50,6 +50,12 @@ jobs:
           echo "File size: $(wc -c < sa.json) bytes"
           echo "First 50 chars of file:"
           head -c 50 sa.json
+      
+      - name: Terraform Import Bucket
+        working-directory: ./infra
+        if: ${{ github.event.inputs.action == 'apply' }}
+        run: terraform import yandex_storage_bucket.tf_state itmo-test
+        continue-on-error: true
 
       - name: Terraform Initialize
         working-directory: ./infra
