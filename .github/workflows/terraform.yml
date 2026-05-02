@@ -30,6 +30,16 @@ jobs:
         with:
           terraform_version: 1.8.3
 
+      - name: Set up Yandex Cloud service account key
+        working-directory: ./infra
+        env:
+          YC_KEY_JSON: ${{ secrets.YC_KEY_JSON }}
+        run: |
+          printf '%s' "$YC_KEY_JSON" > sa.json
+          python3 -c "import json,sys; json.load(open('sa.json'))" \
+            && echo "✅ sa.json is valid JSON" \
+            || { echo "❌ sa.json is NOT valid JSON"; exit 1; }
+
       - name: Terraform Initialize
         working-directory: ./infra
         run: |
