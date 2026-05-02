@@ -14,10 +14,5 @@ resource "yandex_storage_bucket" "tf_state" {
     }
   }
 
-  labels = {
-    project = "kittygram"
-    purpose = "terraform-state"
-  }
-
   force_destroy = false
 }

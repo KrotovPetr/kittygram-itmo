@@ -1,6 +1,5 @@
 data "yandex_compute_image" "os" {
-  family       = var.image_family
-  most_recent  = true
+  family = var.image_family
 }
 
 resource "yandex_compute_instance" "vm_1" {
@@ -38,7 +37,7 @@ resource "yandex_compute_instance" "vm_1" {
 
   metadata = {
     serial-port-enable = "1"
-    user-data          = templatefile("${path.module}/init/vm-install.yml", {
+    user-data = templatefile("${path.module}/init/vm-install.yml", {
       SSH_KEY = var.ssh_key
     })
   }
