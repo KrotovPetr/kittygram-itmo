@@ -1,5 +1,5 @@
 resource "yandex_storage_bucket" "tf_state" {
-  bucket = "kittygram-tf-state"
+  bucket = "itmo-test"
   acl    = "private"
 
   versioning {
