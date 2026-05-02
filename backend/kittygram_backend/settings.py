@@ -120,3 +120,24 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',  # noqa: E501
     'PAGE_SIZE': 10,
 }
+
+SECRET_KEY = os.environ.get("SECRET_KEY", default=get_random_secret_key())
+
+DEBUG = os.environ.get("DEBUG", "false") in {"true", "True", "1"}
+
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
+
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get("POSTGRES_DB", "postgres"),
+        'USER': os.environ.get("POSTGRES_USER", "postgres"),
+        'PASSWORD': os.environ.get("POSTGRES_PASSWORD", "postgres"),
+        'HOST': os.environ.get("POSTGRES_HOST", "localhost"),
+        'PORT': int(os.environ.get("POSTGRES_PORT", 5432))  # ✅ исправлена опечатка
+    }
+}
