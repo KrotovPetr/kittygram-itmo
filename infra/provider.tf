@@ -9,7 +9,7 @@ terraform {
   }
 
   backend "s3" {
-    endpoint = "storage.yandexcloud.net"
+    endpoint = "https://storage.yandexcloud.net"
 
     bucket = "itmo-test"
     region = "ru-central1"
