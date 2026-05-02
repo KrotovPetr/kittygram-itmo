@@ -1,0 +1,27 @@
+#cloud-config
+ssh_pwauth: no
+users:
+  - name: user
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - "${SSH_KEY}"
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - docker.io
+  - docker-compose-plugin
+
+write_files:
+  - path: /usr/local/bin/docker-compose
+    permissions: "0755"
+    owner: root:root
+    content: |
+      #!/usr/bin/env bash
+      exec docker compose "$@"
+
+runcmd:
+  - usermod -aG docker user
+  - systemctl enable --now docker
